@@ -22,7 +22,7 @@ The `/config/elasticsearch/plugins` folder is mapped to the plugins folder in th
 1. `git clone https://github.com/10up/wp-local-docker.git <my-project-name>`
 1. `cd <my-project-name>`
 1. `docker-compose up`
-1. Run setup to download WordPress and create a `wp-config.php` file.
+1. Run setup.sh, which will download WordPress and create a `wp-config.php` file.
 	1. On Linux / Unix / OSX, run `sh bin/setup.sh`.
 	2. On Windows, run `./bin/setup`.
 1. Navigate to `http://localhost` in a browser to finish WordPress setup.
@@ -59,6 +59,8 @@ services:
       ES_JAVA_OPTS: "-Xms2g -Xmx2g"
 ```
 
+Note that some multi-value options, such as ports, will be concatenated instead of replaced with what's in your override file so if you want to change exposed ports you will need to make the change in `docker-compose.yml`. Read [more details](https://docs.docker.com/compose/extends/#adding-and-overriding-configuration).
+
 ## WP-CLI
 
 Add this alias to `~/.bash_profile` to easily run WP-CLI command.
@@ -83,6 +85,14 @@ alias dcbash='docker-compose exec --user root phpfpm bash'
 This alias lets you run `dcbash` to SSH into the PHP/WordPress container.
 
 Alternatively, there is a script in the `/bin` directory that allows you to SSH in to the environment from the project directory directly: `./bin/ssh`.
+
+## Troubleshooting
+
+If you get an error like this
+
+ERROR: for nginx  Cannot start service nginx: driver failed programming external connectivity on endpoint wplocaldocker_nginx_1 (a373ec94473a815969ccb7070d56bd44b67b985cc242c11f08bf1cceded717e8): Error starting userland proxy: Bind for 0.0.0.0:80: unexpected error (Failure EADDRINUSE)
+
+Make sure your host is not using the indicated port, 80 in this example, and change the port mapping as needed in `docker-compose.yml`.
 
 ## MailCatcher
 
